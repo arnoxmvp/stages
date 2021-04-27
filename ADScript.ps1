@@ -21,7 +21,7 @@ $domainName = "xxx"
 $topics = @{
     Disabled = "/Security/ADDomain/$domainName/IAM/Disabled"
     Enabled = "/Security/ADDomain/$domainName/IAM/Enabled"
-    UnusedAcounts = "/Security/ADDomain/$domainName/IAM/UnusedAccount6Months"
+    UnusedAccounts = "/Security/ADDomain/$domainName/IAM/UnusedAccount6Months"
     NeverUsed = "/Security/ADDomain/$domainName/IAM/NeverUsed"
     PwdUnchanged = "/Security/ADDomain/$domainName/IAM/PasswordUnchange1Year"
     PwdLocked = "/Security/ADDomain/$domainName/IAM/Locked"
@@ -65,17 +65,17 @@ $nbUnlinkedGPO = ($GPOXmlReport.GPOS.GPO | Where-Object {$_.LinksTo -eq $null}).
 #Sending the data over MQTT with Mosquitto
 .\Mosquitto\mosquitto_pub.exe -t $topics.Enabled -m $nbEnabled -h hostip
 .\Mosquitto\mosquitto_pub.exe -t $topics.Disabled -m $nbDisabled -h hostip
-.\Mosquitto\mosquitto_pub.exe -t $topics.Locked -m $nbLocked -h hostip
-.\Mosquitto\mosquitto_pub.exe -t "Security/ADDomain/$domainName/IAM/UnusedAccount6Months" -m $nb6monthsNotUsed -h hostip
-.\Mosquitto\mosquitto_pub.exe -t "Security/ADDomain/$domainName/IAM/NeverUsed" -m $nbNeverUsed -h hostip
-.\Mosquitto\mosquitto_pub.exe -t "Security/ADDomain/$domainName/IAM/Expired" -m $nbExpired -h hostip
-.\Mosquitto\mosquitto_pub.exe -t "Security/ADDomain/$domainName/IAM/Pwd1YearChange" -m $nbYearUnchangedPwd -h hostip
+.\Mosquitto\mosquitto_pub.exe -t $topics.PwdLocked -m $nbLocked -h hostip
+.\Mosquitto\mosquitto_pub.exe -t $topics.UnusedAccounts -m $nb6monthsNotUsed -h hostip
+.\Mosquitto\mosquitto_pub.exe -t $topics.NeverUsed -m $nbNeverUsed -h hostip
+.\Mosquitto\mosquitto_pub.exe -t $topics.Expired -m $nbExpired -h hostip
+.\Mosquitto\mosquitto_pub.exe -t $topics.PwdUnchanged -m $nbYearUnchangedPwd -h hostip
 
 
-.\Mosquitto\mosquitto_pub.exe -t "Security/ADDomain/$domainName/IAM/DomainAdmins" -m $nbDomainAdmins -h hostip
-.\Mosquitto\mosquitto_pub.exe -t "Security/ADDomain/$domainName/IAM/Admins" -m $nbAdmins -h hostip
-.\Mosquitto\mosquitto_pub.exe -t "Security/ADDomain/$domainName/IAM/DisabledProtected" -m $nbDisabledProtected -h hostip
+.\Mosquitto\mosquitto_pub.exe -t $topics.DomainAdmins -m $nbDomainAdmins -h hostip
+.\Mosquitto\mosquitto_pub.exe -t $topics.Admins -m $nbAdmins -h hostip
+.\Mosquitto\mosquitto_pub.exe -t $topics.DisabledProtected" -m $nbDisabledProtected -h hostip
 
-.\Mosquitto\mosquitto_pub.exe -t "Security/ADDomain/$domainName/IAM/Computers" -m $nbComputers -h hostip
+.\Mosquitto\mosquitto_pub.exe -t $topics.Computers -m $nbComputers -h hostip
 
-.\Mosquitto\mosquitto_pub.exe -t "Security/ADDomain/$domainName/IAM/UnlinkedGpos" -m $nbUnlinkedGPO -h hostip
+.\Mosquitto\mosquitto_pub.exe -t $topics.Gpos -m $nbUnlinkedGPO -h hostip
