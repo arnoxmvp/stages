@@ -63,9 +63,9 @@ $nbUnlinkedGPO = ($GPOXmlReport.GPOS.GPO | Where-Object {$_.LinksTo -eq $null}).
 
 
 #Sending the data over MQTT with Mosquitto
-.\Mosquitto\mosquitto_pub.exe -t "Security/ADDomain/$domainName/IAM/Enabled" -m $nbEnabled -h hostip
-.\Mosquitto\mosquitto_pub.exe -t "Security/ADDomain/$domainName/IAM/Disabled" -m $nbDisabled -h hostip
-.\Mosquitto\mosquitto_pub.exe -t "Security/ADDomain/$domainName/IAM/Locked" -m $nbLocked -h hostip
+.\Mosquitto\mosquitto_pub.exe -t $topics.Enabled -m $nbEnabled -h hostip
+.\Mosquitto\mosquitto_pub.exe -t $topics.Disabled -m $nbDisabled -h hostip
+.\Mosquitto\mosquitto_pub.exe -t $topics.Locked -m $nbLocked -h hostip
 .\Mosquitto\mosquitto_pub.exe -t "Security/ADDomain/$domainName/IAM/UnusedAccount6Months" -m $nb6monthsNotUsed -h hostip
 .\Mosquitto\mosquitto_pub.exe -t "Security/ADDomain/$domainName/IAM/NeverUsed" -m $nbNeverUsed -h hostip
 .\Mosquitto\mosquitto_pub.exe -t "Security/ADDomain/$domainName/IAM/Expired" -m $nbExpired -h hostip
