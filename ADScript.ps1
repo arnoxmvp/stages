@@ -1,5 +1,5 @@
 <#
-    ADScript v1.3
+    ADScript v1.4
    This script will retrieve some security data about the Windows AD domain of specified domain.
    Data retrieved contains :
             .Quantity of disabled, enabled, expired, unused, never used and locked users.
@@ -17,7 +17,7 @@
 $hostip = 'broker_address'
 $6months = 180
 $12months = 365
-$domainName = "xxx"
+$domainName = "fqdnname"
 $topics = @{
     Disabled = "/Security/ADDomain/$domainName/IAM/Disabled"
     Enabled = "/Security/ADDomain/$domainName/IAM/Enabled"
@@ -33,7 +33,7 @@ $topics = @{
     Computers = "/Security/ADDomain/$domainName/IAM/Computers"
     Gpos = "/Security/ADDomain/$domainName/IAM/UnlinkedGpos"
 }
-$server = "domain_namehostip"
+$server = "domain"
 $since6months = [DateTime]::Today.AddDays($6months)
 $since12months = [DateTime]::Today.AddDays($12months)
 
