@@ -1,5 +1,5 @@
 <#
-    ADScript v1.4
+    ADScript v1.5
    This script will retrieve some security data about the Windows AD domain of specified domain.
    Data retrieved contains :
             .Quantity of disabled, enabled, expired, unused, never used and locked users.
@@ -13,27 +13,25 @@
 
 
 
-#Establishing today -X months
-$hostip = 'broker_address'
+#Establishing variables
+param($hostip, $server) 
 $6months = 180
 $12months = 365
-$domainName = "fqdnname"
 $topics = @{
-    Disabled = "/Security/ADDomain/$domainName/IAM/Disabled"
-    Enabled = "/Security/ADDomain/$domainName/IAM/Enabled"
-    UnusedAccounts = "/Security/ADDomain/$domainName/IAM/UnusedAccount6Months"
-    NeverUsed = "/Security/ADDomain/$domainName/IAM/NeverUsed"
-    PwdUnchanged = "/Security/ADDomain/$domainName/IAM/PasswordUnchange1Year"
-    PwdLocked = "/Security/ADDomain/$domainName/IAM/Locked"
-    Expired = "/Security/ADDomain/$domainName/IAM/Expired"
-    PwdNeverChange = "/Security/ADDomain/$domainName/IAM/PwdNeverChange"
-    DomainAdmins = "/Security/ADDomain/$domainName/IAM/DomainAdmins"
-    Admins = "/Security/ADDomain/$domainName/IAM/Admins"
-    DisabledProtected = "/Security/ADDomain/$domainName/IAM/DisabledProtected"
-    Computers = "/Security/ADDomain/$domainName/IAM/Computers"
-    Gpos = "/Security/ADDomain/$domainName/IAM/UnlinkedGpos"
+    Disabled = "/Security/ADDomain/$server/IAM/Disabled"
+    Enabled = "/Security/ADDomain/$server/IAM/Enabled"
+    UnusedAccounts = "/Security/ADDomain/$server/IAM/UnusedAccount6Months"
+    NeverUsed = "/Security/ADDomain/$server/IAM/NeverUsed"
+    PwdUnchanged = "/Security/ADDomain/$server/IAM/PasswordUnchange1Year"
+    PwdLocked = "/Security/ADDomain/$server/IAM/Locked"
+    Expired = "/Security/ADDomain/$server/IAM/Expired"
+    PwdNeverChange = "/Security/ADDomain/$server/IAM/PwdNeverChange"
+    DomainAdmins = "/Security/ADDomain/$server/IAM/DomainAdmins"
+    Admins = "/Security/ADDomain/$server/IAM/Admins"
+    DisabledProtected = "/Security/ADDomain/$server/IAM/DisabledProtected"
+    Computers = "/Security/ADDomain/$server/IAM/Computers"
+    Gpos = "/Security/ADDomain/$server/IAM/UnlinkedGpos"
 }
-$server = "domain"
 $since6months = [DateTime]::Today.AddDays($6months)
 $since12months = [DateTime]::Today.AddDays($12months)
 
@@ -62,7 +60,6 @@ $nbComputers = (Get-ADComputer -filter * -Server $server).count
 $nbUnlinkedGPO = ($GPOXmlReport.GPOS.GPO | Where-Object {$_.LinksTo -eq $null}).count 
 
 
-#Sending the data over MQTT with Mosquitto
 .\Mosquitto\mosquitto_pub.exe -t $topics.Enabled -m $nbEnabled -h $hostip
 .\Mosquitto\mosquitto_pub.exe -t $topics.Disabled -m $nbDisabled -h $hostip
 .\Mosquitto\mosquitto_pub.exe -t $topics.PwdLocked -m $nbLocked -h $hostip
@@ -75,7 +72,5 @@ $nbUnlinkedGPO = ($GPOXmlReport.GPOS.GPO | Where-Object {$_.LinksTo -eq $null}).
 .\Mosquitto\mosquitto_pub.exe -t $topics.DomainAdmins -m $nbDomainAdmins -h $hostip
 .\Mosquitto\mosquitto_pub.exe -t $topics.Admins -m $nbAdmins -h $hostip
 .\Mosquitto\mosquitto_pub.exe -t $topics.DisabledProtected -m $nbDisabledProtected -h $hostip
-
 .\Mosquitto\mosquitto_pub.exe -t $topics.Computers -m $nbComputers -h $hostip
-
 .\Mosquitto\mosquitto_pub.exe -t $topics.Gpos -m $nbUnlinkedGPO -h $hostip
