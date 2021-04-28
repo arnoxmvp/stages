@@ -1,5 +1,5 @@
 """
-UserCounter v1.1
+UserCounter v1.3
 The script counts the number of personnal accounts logged on a domain by parsing it and counting the matching searches.
 The LogOn script generates a log file containing all logons generated on a monthly basis.
 This log file is given by parameters using the argv method.
@@ -11,18 +11,27 @@ Documentations can be found on :  https://www.temporaryURL.com/doc/mydoc
 # Module importations
 from paho.mqtt import publish as pb
 import pandas as pd
+import argparse
+
+# Args define
+parser = argparse.ArgumentParser()
+parser.add_argument("LogonLog", help="File containing logs")
+parser.add_argument("LoginList", help="List of generic logins")
+parser.add_argument("hostip", help="IP of MQTT Broker")
+parser.add_argument("domain", help="Domain you'd like to work on")
+args = parser.parse_args()
 
 # Creates Variables
 userDict = {}
-userList = "genericLogins.txt"
-loginList = "LogonLogs.csv"
 counter = 0
 i = 0
 
+# Compile th regEx
+
 
 # Open files
-users = open(userList, 'r')
-logs = pd.read_csv(loginList, delimiter=";")
+users = open(args.LoginList, 'r')
+logs = pd.read_csv(args.LogonLog, delimiter=";")
 
 # Populates the dictionnary
 for user in users:
@@ -39,5 +48,5 @@ while i < len(logs):
     i += 1
 
 # Sends data over MQTT
-pb.single(topix,counter,host)
-pb.single(topix,iterator,host)
+pb.single("Security/ADDomain/" + args.domain + "/Usage/Generic", counter, args.hostip)
+pb.single("Security/ADDomain/" + args.domain + "/Usage/Personnal", i-counter, args.hostip)
