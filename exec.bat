@@ -18,4 +18,4 @@ PingCastle.exe --scanner share --server %domain%
 python XMLparser.py %xml_location% %tags_location% %broker_ip% %domain% 
 python SMBParser.py %smb_report% %broker_ip% %domain% 
 python shareCounter.py %share_report% %broker_ip% %domain% 
-rem python userCounter.py %logs_file% %login_list% %broker_ip% %domain%
+python userCounter.py %logs_file% %login_list% %broker_ip% %domain%
