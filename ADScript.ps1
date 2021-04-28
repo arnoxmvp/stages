@@ -63,19 +63,19 @@ $nbUnlinkedGPO = ($GPOXmlReport.GPOS.GPO | Where-Object {$_.LinksTo -eq $null}).
 
 
 #Sending the data over MQTT with Mosquitto
-.\Mosquitto\mosquitto_pub.exe -t $topics.Enabled -m $nbEnabled -h hostip
-.\Mosquitto\mosquitto_pub.exe -t $topics.Disabled -m $nbDisabled -h hostip
-.\Mosquitto\mosquitto_pub.exe -t $topics.PwdLocked -m $nbLocked -h hostip
-.\Mosquitto\mosquitto_pub.exe -t $topics.UnusedAccounts -m $nb6monthsNotUsed -h hostip
-.\Mosquitto\mosquitto_pub.exe -t $topics.NeverUsed -m $nbNeverUsed -h hostip
-.\Mosquitto\mosquitto_pub.exe -t $topics.Expired -m $nbExpired -h hostip
-.\Mosquitto\mosquitto_pub.exe -t $topics.PwdUnchanged -m $nbYearUnchangedPwd -h hostip
+.\Mosquitto\mosquitto_pub.exe -t $topics.Enabled -m $nbEnabled -h $hostip
+.\Mosquitto\mosquitto_pub.exe -t $topics.Disabled -m $nbDisabled -h $hostip
+.\Mosquitto\mosquitto_pub.exe -t $topics.PwdLocked -m $nbLocked -h $hostip
+.\Mosquitto\mosquitto_pub.exe -t $topics.UnusedAccounts -m $nb6monthsNotUsed -h $hostip
+.\Mosquitto\mosquitto_pub.exe -t $topics.NeverUsed -m $nbNeverUsed -h $hostip
+.\Mosquitto\mosquitto_pub.exe -t $topics.Expired -m $nbExpired -h $hostip
+.\Mosquitto\mosquitto_pub.exe -t $topics.PwdUnchanged -m $nbYearUnchangedPwd -h $hostip
 
 
-.\Mosquitto\mosquitto_pub.exe -t $topics.DomainAdmins -m $nbDomainAdmins -h hostip
-.\Mosquitto\mosquitto_pub.exe -t $topics.Admins -m $nbAdmins -h hostip
-.\Mosquitto\mosquitto_pub.exe -t $topics.DisabledProtected" -m $nbDisabledProtected -h hostip
+.\Mosquitto\mosquitto_pub.exe -t $topics.DomainAdmins -m $nbDomainAdmins -h $hostip
+.\Mosquitto\mosquitto_pub.exe -t $topics.Admins -m $nbAdmins -h $hostip
+.\Mosquitto\mosquitto_pub.exe -t $topics.DisabledProtected -m $nbDisabledProtected -h $hostip
 
-.\Mosquitto\mosquitto_pub.exe -t $topics.Computers -m $nbComputers -h hostip
+.\Mosquitto\mosquitto_pub.exe -t $topics.Computers -m $nbComputers -h $hostip
 
-.\Mosquitto\mosquitto_pub.exe -t $topics.Gpos -m $nbUnlinkedGPO -h hostip
+.\Mosquitto\mosquitto_pub.exe -t $topics.Gpos -m $nbUnlinkedGPO -h $hostip
