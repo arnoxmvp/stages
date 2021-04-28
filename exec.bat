@@ -2,6 +2,7 @@
 
 set domain=
 set broker_ip=
+set regex=
 set xml_location=
 set tags_location=
 set smb_report=
@@ -18,4 +19,4 @@ PingCastle.exe --scanner share --server %domain%
 python XMLparser.py %xml_location% %tags_location% %broker_ip% %domain% 
 python SMBParser.py %smb_report% %broker_ip% %domain% 
 python shareCounter.py %share_report% %broker_ip% %domain% 
-python userCounter.py %logs_file% %login_list% %broker_ip% %domain%
+python userCounter.py %logs_file% %login_list% %regex% %broker_ip% %domain%
