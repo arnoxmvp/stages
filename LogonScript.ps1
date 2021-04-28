@@ -1,5 +1,5 @@
 <#
-    LongonScript v1.2
+    LongonScript v1.3
    This script will retrieve the user data which logs to an Active Directory domain for logging purposes.
    Data retrieved contains Date(yyyyMMdd HH:ss), Domain used, Username, Computer name, IP Address and is wroten each time an user connect. 
    Data is stored on a shared drive.
@@ -10,6 +10,7 @@
 #Variables definition
 
 $filePath = ""
+$outfile = ""
 $date = Get-Date -Format yyyyMM
 $Header = "LogonDate;DomainName;PCName;LoginName;IPAddress"
 $logonDate = Get-Date -Format yyyy/MM/dd-HH:mm:ss
@@ -28,10 +29,12 @@ $OutInfo = $logonDate + ";" + $domainName + ";" + $computerName + ";" + $userNam
 #Checks if CSV has already been created for the day/is accessible. If already exists, appends existing file.
 
 if (Test-path $filePath) {
-    Add-Content -Value $OutInfo -Path $filePath
+    Add-Content -Value $OutInfo -Path $outfile
 }
-else {
-    $OutFile = $filePath
+elseif(Test-Path $filepath) {
     Add-Content -Value $Header -Path $OutFile
     Add-Content -Value $OutInfo -Path $OutFile 
 } 
+else{
+    exit
+}
