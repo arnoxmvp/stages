@@ -26,9 +26,6 @@ userDict = {}
 counter = 0
 i = 0
 
-# Compile th regEx
-
-
 # Open files
 users = open(args.LoginList, 'r')
 logs = pd.read_csv(args.LogonLog, delimiter=";")
