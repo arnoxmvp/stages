@@ -1,6 +1,6 @@
 """
 UserCounter v1.3
-The script counts the number of personnal accounts logged on a domain by parsing it and counting the matching searches.
+The script counts the number of personal accounts logged on a domain by parsing it and counting the matching searches.
 The LogOn script generates a log file containing all logons generated on a monthly basis.
 This log file is given by parameters using the argv method.
 It searches the matches with a regular expression passed through argv and with a file containing numerous known logins.
@@ -49,4 +49,4 @@ while i < len(logs):
 
 # Sends data over MQTT
 pb.single("Security/ADDomain/" + args.domain + "/Usage/Generic", counter, args.hostip)
-pb.single("Security/ADDomain/" + args.domain + "/Usage/Personnal", i-counter, args.hostip)
+pb.single("Security/ADDomain/" + args.domain + "/Usage/Personal", i-counter, args.hostip)
