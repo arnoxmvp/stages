@@ -1,5 +1,5 @@
 """
-UserCounter v1.3
+UserCounter v1.5
 The script counts the number of personal accounts logged on a domain by parsing it and counting the matching searches.
 The LogOn script generates a log file containing all logons generated on a monthly basis.
 This log file is given by parameters using the argv method.
@@ -9,41 +9,65 @@ Documentations can be found on :  https://www.temporaryURL.com/doc/mydoc
 """
 
 # Module importations
-from paho.mqtt import publish as pb
+
+from os import system
+import re
 import pandas as pd
 import argparse
 
-# Args define
+# Argparse
 parser = argparse.ArgumentParser()
+parser.add_argument("mosquitto", help="Mosquitto executable")
+parser.add_argument("cafile", help="CA certificate")
+parser.add_argument("certfile", help="Client certificate")
+parser.add_argument("keyfile", help="Client key")
 parser.add_argument("LogonLog", help="File containing logs")
 parser.add_argument("LoginList", help="List of generic logins")
-parser.add_argument("hostip", help="IP of MQTT Broker")
+parser.add_argument("broker", help="CN of MQTT Broker")
 parser.add_argument("domain", help="Domain you'd like to work on")
 args = parser.parse_args()
 
 # Creates Variables
-userDict = {}
 counter = 0
 i = 0
+userDict = {}
 
-# Open files
-users = open(args.LoginList, 'r')
-logs = pd.read_csv(args.LogonLog, delimiter=";")
+genericUsers = open(args.LoginList, 'r')
 
-# Populates the dictionnary
 for user in users:
     if user == "\n":
         break
     else:
         userDict[hash(user)] = user
-print(userDict)
 
-# Checks if the hashed username is in the dictionnary, counter +1 if a match is found
+# Open files
+pattern = re.compile(regex_to_match)
+logs = pd.read_csv(args.LogonLog, delimiter=";")
+
+# Checks if the user login matches the expression nor the hashed userlogin is in the dictionary, counter +1 if true
 while i < len(logs):
-    if hash(str(logs["LoginName"][i])+"\n") in userDict:
+    result = re.match(pattern, str(logs["LoginName"][i]))
+    if result:
+        counter += 1
+    elif hash(str(logs["LoginName"][i]) + "\n") not in userDict:
         counter += 1
     i += 1
+print("Personnel :" + str(counter))
+print("Generique :" + str(i-counter))
 
 # Sends data over MQTT
-pb.single("Security/ADDomain/" + args.domain + "/Usage/Generic", counter, args.hostip)
-pb.single("Security/ADDomain/" + args.domain + "/Usage/Personal", i-counter, args.hostip)
+system(args.mosquitto
+    + " -p 8883 --cafile " + args.cafile
+    + " --cert " + args.certfile
+    + " --key " + args.keyfile
+    + " -h " + args.broker
+    + " -m " + str(i-counter)
+    + " -t Security/ADDomain/" + args.domain + "/Usage/Generic")
+
+system(args.mosquitto
+    + " -p 8883 --cafile " + args.cafile
+    + " --cert " + args.certfile
+    + " --key " + args.keyfile
+    + " -h " + args.broker
+    + " -m " + str(counter)
+    + " -t Security/ADDomain/" + args.domain + "/Usage/Personal")
